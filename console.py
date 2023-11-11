@@ -129,17 +129,6 @@ class HBNBCommand(cmd.Cmd):
             else:
                 print('** no instance found **')
 
-    def do_count(self, line):
-        """Display count of instances specified"""
-        if line in HBNBCommand.classes:
-            count = 0
-            for key, objs in storage.all().items():
-                if line in key:
-                    count += 1
-            print(count)
-        else:
-            print("** class doesn't exist **")
-
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
