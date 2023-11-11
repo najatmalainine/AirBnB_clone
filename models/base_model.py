@@ -3,16 +3,25 @@
 
 import uuid
 from datetime import datetime
+import models
 
 
 class BaseModel:
     """defines all common attributes/methods for other classes"""
+    format_str = "%Y-%m-%dT%H:%M:%S.%f"
 
-    def __init__(self, id=None, created_at=None, updated_at=None):
+    def __init__(self, *args, **kwargs):
         """Constructor"""
-        self.id = str(uuid.uuid4())
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
+        if kwargs:
+            for k, v in kwargs.items():
+                if k == "created_at" or k == "updated_at":
+                    setattr(self, k, datetime.strptime(v, self.format_str))
+                elif k != "__class__":
+                    setattr(self, k, v)
+        else:
+            self.id = str(uuid.uuid4())
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
 
     def __str__(self):
         """returns [<class name>] (<self.id>) <self.__dict__>"""
