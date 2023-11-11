@@ -5,12 +5,6 @@ Entry to command interpreter
 import cmd
 from models import storage
 from models.base_model import BaseModel
-from models.user import User
-from models.state import State
-from models.city import City
-from models.amenity import Amenity
-from models.place import Place
-from models.review import Review
 
 
 class HBNBCommand(cmd.Cmd):
@@ -123,68 +117,6 @@ class HBNBCommand(cmd.Cmd):
             print("** attribute name missing **")
         else:
             print("** value missing **")
-
-    def do_count(self, line):
-        """Display count of instances specified"""
-        if line in HBNBCommand.classes:
-            count = 0
-            for key, objs in storage.all().items():
-                if line in key:
-                    count += 1
-            print(count)
-        else:
-            print("** class doesn't exist **")
-
-    def default(self, line):
-        """Accepts class name followed by arguement"""
-        args = line.split('.')
-        class_arg = args[0]
-        if len(args) == 1:
-            print("*** Unknown syntax: {}".format(line))
-            return
-        try:
-            args = args[1].split('(')
-            command = args[0]
-            if command == 'all':
-                HBNBCommand.do_all(self, class_arg)
-            elif command == 'count':
-                HBNBCommand.do_count(self, class_arg)
-            elif command == 'show':
-                args = args[1].split(')')
-                id_arg = args[0]
-                id_arg = id_arg.strip("'")
-                id_arg = id_arg.strip('"')
-                arg = class_arg + ' ' + id_arg
-                HBNBCommand.do_show(self, arg)
-            elif command == 'destroy':
-                args = args[1].split(')')
-                id_arg = args[0]
-                id_arg = id_arg.strip('"')
-                id_arg = id_arg.strip("'")
-                arg = class_arg + ' ' + id_arg
-                HBNBCommand.do_destroy(self, arg)
-            elif command == 'update':
-                args = args[1].split(',')
-                id_arg = args[0].strip("'")
-                id_arg = id_arg.strip('"')
-                name_arg = args[1].strip(',')
-                val_arg = args[2]
-                name_arg = name_arg.strip(' ')
-                name_arg = name_arg.strip("'")
-                name_arg = name_arg.strip('"')
-                val_arg = val_arg.strip(' ')
-                val_arg = val_arg.strip(')')
-                arg = class_arg + ' ' + id_arg + ' ' + name_arg + ' ' + val_arg
-                HBNBCommand.do_update(self, arg)
-            else:
-                print("*** Unknown syntax: {}".format(line))
-        except IndexError:
-            print("*** Unknown syntax: {}".format(line))
-
-
-def parse(line):
-    """Helper method to parse user typed input"""
-    return tuple(line.split())
 
 
 if __name__ == "__main__":
