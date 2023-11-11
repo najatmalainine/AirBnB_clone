@@ -1,17 +1,30 @@
 #!/usr/bin/python3
-"""Class BaseModel"""
-
-import uuid
 from datetime import datetime
+from uuid import uuid4
 import models
 
+"""
+Module BaseModel
+Parent of all classes
+"""
 
-class BaseModel:
-    """defines all common attributes/methods for other classes"""
-    format_str = "%Y-%m-%dT%H:%M:%S.%f"
+
+class BaseModel():
+    """Base class for Airbnb clone project
+    Methods:
+        __init__(self, *args, **kwargs)
+        __str__(self)
+        __save(self)
+        __repr__(self)
+        to_dict(self)
+    """
 
     def __init__(self, *args, **kwargs):
-        """Constructor"""
+        """
+        Initialize attributes: random uuid, dates created/updated
+
+
+        """
         if kwargs:
             for key, val in kwargs.items():
                 if "created_at" == key:
@@ -25,25 +38,34 @@ class BaseModel:
                 else:
                     setattr(self, key, val)
         else:
-            self.id = str(uuid.uuid4())
+            self.id = str(uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
             models.storage.new(self)
 
     def __str__(self):
-        """returns [<class name>] (<self.id>) <self.__dict__>"""
-        return "[{}] ({}) {}".format(
-            self.__class__.__name__, self.id, self.__dict__)
+        """
+        Return string of info about model
+        """
+        return ('[{}] ({}) {}'.
+                format(self.__class__.__name__, self.id, self.__dict__))
+
+    def __repr__(self):
+        """
+        returns string representation
+        """
+        return (self.__str__())
 
     def save(self):
-        """updates updated_at with the current datetime"""
+        """
+        Update instance with updated time & save to serialized file
+        """
         self.updated_at = datetime.now()
         models.storage.save()
 
     def to_dict(self):
         """
-        returns a dictionary containing all keys/values
-        of __dict__ of the instance
+        Return dic with string formats of times; add class info to dic
         """
         dic = {}
         dic["__class__"] = self.__class__.__name__
